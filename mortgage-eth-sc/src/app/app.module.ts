@@ -6,19 +6,22 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MortgageCreateComponent } from './components/mortgage-create/mortgage-create.component';
 import { MortgagePreviewComponent } from './components/mortgage-preview/mortgage-preview.component';
+import { SmartContractService } from './services/smart-contract/smart-contract.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     MortgageCreateComponent,
-    MortgagePreviewComponent
+    MortgagePreviewComponent,
    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    SmartContractService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

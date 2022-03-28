@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SmartContractService } from 'src/app/services/smart-contract/smart-contract.service';
 import { OptionalFields } from './mortgage-create.component.def'
 
 @Component({
@@ -42,7 +43,7 @@ export class MortgageCreateComponent implements OnInit {
     utilitiesActive: false,
   }
 
-  constructor() { }
+  constructor(private _smartContractService: SmartContractService) {}
 
   public ngOnInit(): void {
   }

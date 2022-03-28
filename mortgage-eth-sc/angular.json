@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["crypto", "stream", "assert", "http", "https", "os", "fs"],
             "outputPath": "dist/mortgage-eth-sc",
             "index": "src/index.html",
             "main": "src/main.ts",
