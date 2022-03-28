@@ -1,0 +1,190 @@
+<form class="form" [formGroup]="mortgageForm">
+    <div class="section">
+        <label class ="title">
+            Conclusion informations
+        </label>
+        <div class="section__form-group">
+            <label>
+                Conclusion date
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['conclusionDate']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Conclusion address
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['conclusionDate']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Court in jurisdiction
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['courtInJurisdiction']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Tax payer
+            </label>
+            <input type="radio" id="html" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']" value="Buyer">
+            <label for="html">Buyer</label>
+            <input type="radio" id="css" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']" value="Seller">
+            <label for="css">Seller</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Seller details
+        </label>
+        <div class="section__form-group">
+            <label>
+                Full name
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['fullName']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Address street
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['addressStreet']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Address city
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['addressCity']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Buyer details
+        </label>
+        <div class="section__form-group">
+            <label>
+                Full name
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['fullName']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Address street
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['addressStreet']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Address city
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['addressCity']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Property details
+        </label>
+        <div class="section__form-group">
+            <label>
+                Identification number
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['propertyId']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Area (number)
+            </label>
+            <input type="number" [formControl]="$any(mortgageForm).controls['area']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Price (number - RSD)
+            </label>
+            <input type="number" [formControl]="$any(mortgageForm).controls['basePrice']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Price (label)
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['basePriceLabel']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Is by third person (optional)
+        </label>
+        <button class="visibility-button" type="button" (click)="toggle('proxyActive')">{{ conditionalFields.proxyActive ? 'Remove' : 'Add' }}</button>
+        <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
+            <label>
+                You will be using third person for the payment transaction
+            </label>
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Use deposit (optional)
+        </label>
+        <button class="visibility-button" type="button" (click)="toggle('depositActive')">{{ conditionalFields.depositActive ? 'Remove' : 'Add' }}</button>
+        <div *ngIf="conditionalFields.depositActive" class="section__form-group">
+            <label>
+                Deposit value (number)
+            </label>
+            <input type="number" [formControl]="$any(mortgageForm).controls['depositValue']">
+        </div>
+        <div *ngIf="conditionalFields.depositActive" class="section__form-group">
+            <label>
+                Deposit value (label)
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['depositValueLabel']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Pay in parts (optional)
+        </label>
+        <button class="visibility-button" type="button" (click)="toggle('paymentPartsActive')">{{ conditionalFields.paymentPartsActive ? 'Remove' : 'Add' }}</button>
+        <div *ngIf="conditionalFields.paymentPartsActive" class="section__form-group">
+            <label>
+                Number of parts
+            </label>
+            <input type="number" [formControl]="$any(mortgageForm).controls['paymentPartsNum']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Move out date (optional)
+        </label>
+        <button class="visibility-button" type="button" (click)="toggle('movingOutActive')">{{ conditionalFields.movingOutActive ? 'Remove' : 'Add' }}</button>
+        <div *ngIf="conditionalFields.movingOutActive" class="section__form-group">
+            <label>
+                Date to move out
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['movingOutDate']">
+        </div>
+    </div>
+
+    <div class="section">
+        <label class ="title">
+            Utilities payment (optional)
+        </label>
+        <button class="visibility-button" type="button" (click)="toggle('utilitiesActive')">{{ conditionalFields.utilitiesActive ? 'Remove' : 'Add' }}</button>
+        <div *ngIf="conditionalFields.utilitiesActive" class="section__form-group">
+            <label>
+                Seller will have to pay the utilities before the property is delegated
+            </label>
+        </div>
+    </div>
+
+    <div class="actions-wrapper">
+        <button type="button" (click)="preview()">
+            Preview
+        </button>
+        <button type="button" (click)="onSubmit()">
+            Deploy to ETH
+        </button>        
+    </div>
+</form>
