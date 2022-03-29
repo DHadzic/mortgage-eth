@@ -17,12 +17,12 @@ export interface Mortgage {
     conclusionAddress: string
     courtInJurisdiction: string
     taxPayer: 'BUYER' | 'SELLER'
-    byProxy: boolean
-    depositValue: number
-    depositValueLabel: number
-    paymentPartsNum: number
-    movingOutDate: string
-    utilitiesPaid: boolean
+    byProxy?: boolean
+    depositValue?: number
+    depositValueLabel?: number
+    paymentPartsNum?: number
+    movingOutDate?: string
+    utilitiesPaid?: boolean
 }
 
 export interface OptionalFields {
@@ -31,4 +31,16 @@ export interface OptionalFields {
     paymentPartsActive: boolean
     movingOutActive: boolean
     utilitiesActive: boolean
+}
+
+export interface DeployedContractResponse {
+    contactAddress: string
+}
+
+export interface ContractSourceResponse {
+    contractSource: string
+}
+
+export interface DeployedContractData {
+    contractAddress: string
 }

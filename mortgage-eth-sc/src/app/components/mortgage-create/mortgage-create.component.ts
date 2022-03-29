@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OptionalFields, Mortgage } from 'src/app/services/smart-contract/smart-contract.service.d';
 import { SmartContractService } from 'src/app/services/smart-contract/smart-contract.service';
-import { OptionalFields } from './mortgage-create.component.def'
 
 @Component({
   selector: 'app-mortgage-create',
@@ -54,6 +54,14 @@ export class MortgageCreateComponent implements OnInit {
 
   public onSubmit(): void {
     console.log(this.mortgageForm.value);
+    console.log(this.mortgageForm.valid);
+
+    if (!this.mortgageForm.valid) {
+      return;
+    }
+
+    const mortgageDate = this.mortgageForm.value as Mortgage;
+    this._smartContractService.deployContract(mortgageDate).subscribe(console.log);
   }
 
   public preview(): void {

@@ -1,37 +1,32 @@
 require('dotenv').config();
 const express = require('express');
-const util = require('./util.js');
+const contractHelper = require('./contractHelper.js');
 
 
 const app = express()
 const port = 3000
 
-app.get('/contract', (req, res) => {
-    // const contractData = req.body;
-    const contractData = {
-        propertyId: 5,
-        seller: {
-            fullName: 'ASd',
-            addressStreet: 'asd',
-            addressCity: 'asd',
-        },
-        buyer: {
-            fullName: 'asd2',
-            addressStreet: 'asd2',
-            addressCity: 'asd2',
-        },
-        totalPrice: 500,
-        basePrice: 500,
-        basePriceLabel: 'Pesto',
-        conclusionDate: 'Datum',
-        conclusionAddress: 'Adresa',
-        taxPayer: 0,
-        courtInJurisdiction: 'Sud',
+app.post('/contract', async (req, res) => {
+    const isBodyValid = validateBody(req.body);
+    if (!isBodyValid) {
+        res.status(400).send('Body must contain all fields');
+    }
 
-    } 
-    const contractSource = util.getContract();
-    util.deployContract(contractSource, contractData);
-})
+    const mortgageData = utils.populateContractData(req.body);
+    const contractSource = contractHelper.getContract(mortgageData);
+    const contractAddress = await contractHelper.deployContract(contractSource, mortgageData);
+
+    res.status(200).json({ contractAddress });
+});
+
+app.get('/contracts', (req, res) => {
+    // Return all stored addresses
+});
+
+app.get('/contract-preview', (req, res) => {
+    const contractSource = contractHelper.getContract(req.body);
+    res.status(200).json({ contractSource });    
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
-import Web3 from 'web3';
+import { DeployedContractResponse, ContractSourceResponse, Mortgage, DeployedContractData } from './smart-contract.service.d';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SmartContractService {  
-  constructor() {
+  private _url = 'https://localhost:3000';
+
+  constructor(private _http: HttpClient) {
   }
 
-  // Call deployment on BE
-  public deployContract(): void {}
+  public deployContract(data: Mortgage): Observable<DeployedContractResponse> {
+    return this._http.post<DeployedContractResponse>(this._url + '/contract', data);
+  }
 
-  // Call contract preview on BE
-  public getContractPreview(): void {}
+  public getContractPreview(): Observable<ContractSourceResponse> {
+    return this._http.get<ContractSourceResponse>(this._url + '/contract-preview');
+  }
 
-  // Call contract source preview on BE
-  public getContractSourcePreview(): void {}
+  // Interpolate and object with data
+  public getContractSourcePreview(data: Mortgage): void {
+    // Return new object with Clan 1, Clan 2 etc.
+  }
 
-  // Call get contracts addresses on BE
-  public getContractsAddresses(): void {}
+  public getContractsAddresses(): Observable<DeployedContractData[]> {
+    return this._http.get<DeployedContractData[]>(this._url + '/contracts');
+  }
 }
