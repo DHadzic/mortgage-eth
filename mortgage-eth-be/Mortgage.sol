@@ -25,6 +25,7 @@ contract Mortgage is ERC721 {
     bool private _byProxy;
     // Option 2 - DEPOSIT
     uint private _depositValue;
+    string private _depositValueLabel;
     bool private _depositSattled = false;
     // Option 3 - PAYMENT_PARTS_NUMBER
     uint private _paymentPartsNum;
@@ -59,7 +60,7 @@ contract Mortgage is ERC721 {
         _courtInJurisdiction = court;
         _conclusionDate = conclusion_date;
         _conclusionAddress = conclusion_address;
-
+        // Generate token based on property id
         _mint(owner, property_id);
     }
 
@@ -149,9 +150,10 @@ contract Mortgage is ERC721 {
     }
 
     // Option 2 - DEPOSIT
-    function setDeposit(uint256 deposit_value) public {
+    function setDeposit(uint256 deposit_value, string memory deposit_value_label) public {
         require(msg.sender == owner, "Unauthorized");
         _depositValue = deposit_value;
+        _depositValueLabel = deposit_value_label;
     }
 
     function getDepositValue() public view returns(uint256) {

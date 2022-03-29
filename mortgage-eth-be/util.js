@@ -1,6 +1,7 @@
 const Web3 = require('web3');
 const solc = require('solc');
 const path = require('path');
+const ganache = require('ganache-cli');
 const fs = require('fs');
 
 const findImports = (p) => {
@@ -11,35 +12,35 @@ const findImports = (p) => {
         };
 }
 
-const updateContract = (source, flags) => {
+const constructContract = (source, flags) => {
     const contractLines = source.split('\n');
     let rowData, deleteCount;
     
-    for(let i = contractLines.length; i >= 0; i--) {
+    for(let i = contractLines.length - 1; i >= 0; i--) {
         rowData = contractLines[i];
         if (!rowData.includes('// Option')) {
             continue;
         }
 
         deleteCount = 0;
-        if (rowData.inclused('UTILITIES_PAYMENT') && flags.utilities) {
-            deleteCount = i == 197 ? 5 : i == 133 ? 5 : 2;
+        if (rowData.includes('UTILITIES_PAYMENT') && flags.utilities) {
+            deleteCount = i == 199 ? 5 : i == 134 ? 5 : 2;
         }
 
-        if (rowData.inclused('MOVING_OUT_DATE') && flags.movingOut) {
-            deleteCount = i == 182 ? 15 : i == 128 ? 5 : 3;
+        if (rowData.includes('MOVING_OUT_DATE') && flags.movingOut) {
+            deleteCount = i == 184 ? 15 : i == 129 ? 5 : 3;
         }
 
-        if (rowData.inclused('PAYMENT_PARTS_NUMBER') && flags.paymentParts) {
-            deleteCount = i == 166 ? 16 : i == 123 ? 5 : 3;
+        if (rowData.includes('PAYMENT_PARTS_NUMBER') && flags.paymentParts) {
+            deleteCount = i == 168 ? 16 : i == 124 ? 5 : 3;
         }
 
-        if (rowData.inclused('DEPOSIT') && flags.deposit) {
-            deleteCount = i == 151 ? 15 : i == 117 ? 6 : 3;
+        if (rowData.includes('DEPOSIT') && flags.deposit) {
+            deleteCount = i == 152 ? 15 : i == 118 ? 6 : 4;
         }
 
-        if (rowData.inclused('UTILITIES_PAYMENT') && flags.proxy) {
-            deleteCount = i == 141 ? 10 : 2;
+        if (rowData.includes('UTILITIES_PAYMENT') && flags.proxy) {
+            deleteCount = i == 142 ? 10 : 2;
         }
 
         if (deleteCount) {
@@ -60,9 +61,32 @@ const getContract = () => {
     };
 
     const contractPath = path.resolve(__dirname, 'Mortgage.sol');
-    const source = updateContract(fs.readFileSync(contractPath, 'utf8'), flags);
+    const source = constructContract(fs.readFileSync(contractPath, 'utf8'), flags);
 
     return source
+}
+
+const mapToArguments = (contractData) => {
+    return [
+        contractData.propertyId,
+        [
+            contractData.seller.fullName,
+            contractData.seller.addressStreet,
+            contractData.seller.addressCity
+        ],
+        [
+            contractData.buyer.fullName,
+            contractData.buyer.addressStreet,
+            contractData.buyer.addressCity
+        ],
+        contractData.totalPrice,
+        contractData.basePrice,
+        contractData.basePriceLabel,
+        contractData.conclusionDate,
+        contractData.conclusionAddress,
+        contractData.taxPayer,
+        contractData.courtInJurisdiction
+    ];
 }
 
 const compileContract = (contractSource) => {
@@ -87,38 +111,37 @@ const compileContract = (contractSource) => {
     return contractFile;
 }
 
-const deployContract = (contract) => {
+const deployContract = async (contract, contractData) => {
     const contractFile = compileContract(contract);
     const bytecode = contractFile.evm.bytecode.object;
     const abi = contractFile.abi;
 
-    // Generate and fill
-    const privKey = '<private key>'; 
-    const address = '<address>';
+    const privKey = process.env.PRIVATE_KEY; 
+    const constructorArgs = mapToArguments(contractData);
 
     let web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider('https://mainnet.infura.io/v3/bd18030e3088439ebd5f52eca3ab6d50:8545'));
+    web3.setProvider(ganache.provider());
+    const accounts = await web3.eth.getAccounts();
 
     const deploy = async() => {
 
-        console.log('Deploy from account:', address);
+        console.log('Deploy from account:', accounts[0]);
         const incrementer = new web3.eth.Contract(abi);
-
-        const incrementerTx = incrementer.deploy({
-            data: bytecode
-            // Update data and send them
-            // arguments: [],
+        const contractTransaction = await incrementer.deploy({
+            data: bytecode,
+            arguments: constructorArgs,
         })
-        const createTransaction = await web3.eth.accounts.signTransaction({
-                from: address,
-                data: incrementerTx.encodeABI(),
-                gas: 3000000,
-            },
-            privKey
-        )
-        const createReceipt = web3.eth.sendSignedTransaction(createTransaction.rawTransaction).then((res) => {
-            console.log('Contract deployed at address:', res.contractAddress);
+
+        const gasEst = await contractTransaction.estimateGas({from: accounts[0]});
+
+        const contractInstance = await contractTransaction.send({
+            from: accounts[0],
+            data: contractTransaction.encodeABI(),
+            gas: gasEst,
+            gasPrice: 0,
         });
+
+        console.log('Contract address -> ', contractInstance.options.address);
     };
 
     deploy();
