@@ -7,6 +7,8 @@ contract Mortgage is ERC721 {
         string fullName;
         string addressStreet;
         string addressCity;
+        string personalId;
+        string mupId;
     }
     enum Accountable{ BUYER, SELLER }
 
@@ -16,13 +18,15 @@ contract Mortgage is ERC721 {
     uint256 private _totalPrice;
     uint256 private _basePrice;
     string private _basePriceLabel;
+    string private _address;
     string private _conclusionDate;
     string private _conclusionAddress;
     Accountable private _taxPayer;
     string private _courtInJurisdiction;
 
     // Option 1 - PROXY
-    bool private _byProxy;
+    string private _proxyFullName;
+    string private _proxyPersonalId;
     // Option 2 - DEPOSIT
     uint private _depositValue;
     string private _depositValueLabel;
@@ -43,6 +47,7 @@ contract Mortgage is ERC721 {
             uint256 total_price,
             uint256 base_price,
             string memory base_price_label,
+            string memory addr,
             string memory conclusion_date,
             string memory conclusion_address,
             Accountable taxp,
@@ -55,6 +60,7 @@ contract Mortgage is ERC721 {
         _buyer = b;
         _totalPrice = total_price;
         _basePrice = base_price;
+        _address = addr; 
         _basePriceLabel = base_price_label;
         _taxPayer = taxp;
         _courtInJurisdiction = court;
@@ -67,33 +73,53 @@ contract Mortgage is ERC721 {
     function setSeller(
             string memory fullName,
             string memory addressStreet,
-            string memory addressCity) public
+            string memory addressCity,
+            string memory personalId,
+            string memory mupId) public
         {
         require(msg.sender == owner, "Unauthorized");
 
         _seller.fullName = fullName;
         _seller.addressStreet = addressStreet;
         _seller.addressCity = addressCity;
+        _seller.personalId = personalId;
+        _seller.mupId = mupId;
     }
 
     function getSellerInfo() public view returns(string memory) {
-        return string(abi.encodePacked(_seller.fullName," - ", _seller.addressStreet, " - ", _seller.addressCity));
+        return string(abi.encodePacked(
+            _seller.fullName," - ",
+            _seller.addressStreet," - ", 
+            _seller.addressCity, " - ",
+            _seller.personalId, " - ",
+            _seller.mupId)
+        );
     }
 
     function setBuyer(
             string memory fullName,
             string memory addressStreet,
-            string memory addressCity) public
+            string memory addressCity,
+            string memory personalId,
+            string memory mupId) public
         {
         require(msg.sender == owner, "Unauthorized");
 
         _buyer.fullName = fullName;
         _buyer.addressStreet = addressStreet;
         _buyer.addressCity = addressCity;
+        _buyer.personalId = personalId;
+        _buyer.mupId = mupId;
     }
 
     function getBuyerInfo() public view returns(string memory) {
-        return string(abi.encodePacked(_buyer.fullName," - ", _buyer.addressStreet, " - ", _buyer.addressCity));
+        return string(abi.encodePacked(
+            _buyer.fullName," - ",
+            _buyer.addressStreet," - ", 
+            _buyer.addressCity, " - ",
+            _buyer.personalId, " - ",
+            _buyer.mupId)
+        );
     }
 
     function getConclusionDate() public view returns(string memory) {
@@ -140,13 +166,17 @@ contract Mortgage is ERC721 {
     }
 
     // Option 1 - PROXY
-    function setByProxy(bool by_proxy) public {
+    function setProxy(string memory proxy_full_name, string memory proxy_personal_id) public {
         require(msg.sender == owner, "Unauthorized");
-        _byProxy = by_proxy;
+        _proxyFullName = proxy_full_name;
+        _proxyPersonalId = proxy_personal_id;
     }
 
-    function isByProxy() public view returns(bool) {
-        return _byProxy;
+    function getProxy() public view returns(string memory) {
+        return string(abi.encodePacked(
+            _proxyFullName," - ",
+            _proxyPersonalId)
+        );
     }
 
     // Option 2 - DEPOSIT

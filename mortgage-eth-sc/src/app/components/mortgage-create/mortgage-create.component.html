@@ -54,6 +54,18 @@
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['addressCity']">
         </div>
+        <div class="section__form-group">
+            <label>
+                Personal id (JMBG)
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['personalId']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                MUP id
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['mupId']">
+        </div>
     </div>
 
     <div class="section">
@@ -78,6 +90,18 @@
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['addressCity']">
         </div>
+        <div class="section__form-group">
+            <label>
+                Personal id (JMBG)
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['personalId']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                MUP id
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['mupId']">
+        </div>
     </div>
 
     <div class="section">
@@ -89,6 +113,12 @@
                 Identification number
             </label>
             <input type="number" [formControl]="$any(mortgageForm).controls['propertyId']">
+        </div>
+        <div class="section__form-group">
+            <label>
+                Address
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['address']">
         </div>
         <div class="section__form-group">
             <label>
@@ -117,8 +147,15 @@
         <button class="visibility-button" type="button" (click)="toggle('proxyActive')">{{ conditionalFields.proxyActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
             <label>
-                You will be using third person for the payment transaction
+                T.P person full name
             </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['proxyFullName']">
+        </div>
+        <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
+            <label>
+                T.P person id (JMBG)
+            </label>
+            <input type="text" [formControl]="$any(mortgageForm).controls['proxyPersonalId']">
         </div>
     </div>
 

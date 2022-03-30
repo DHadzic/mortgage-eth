@@ -15,11 +15,11 @@ const findImports = (p) => {
 
 const getContract = (contractData) => {
   const removeFlags = {
-      proxy: contractData.byProxy === undefined,
-      deposit: contractData.depositValue === undefined,
-      paymentParts: contractData.paymentPartsNum === undefined,
-      movingOut: contractData.movingOutDate === undefined,
-      utilities: contractData.utilitiesPaid === undefined,
+      proxy: contractData.proxyFullName === null,
+      deposit: contractData.depositValue === null,
+      paymentParts: contractData.paymentPartsNum === null,
+      movingOut: contractData.movingOutDate === null,
+      utilities: contractData.utilitiesPaid === null,
   };
 
   const contractPath = path.resolve(__dirname, 'Mortgage.sol');
@@ -55,7 +55,6 @@ const deployContract = async (contract, contractData) => {
   const bytecode = contractFile.evm.bytecode.object;
   const abi = contractFile.abi;
 
-  const privKey = process.env.PRIVATE_KEY; 
   const constructorArgs = utils.mapToArguments(contractData);
 
   let web3 = new Web3();
@@ -81,11 +80,33 @@ const deployContract = async (contract, contractData) => {
       });
 
       console.log('Contract address -> ', contractInstance.options.address);
-      return contractInstance.options.address;
+      return contractInstance;
   };
 
-  // Set additional data
-  return await deploy();
+  const optionalFlags = {
+    proxy: contractData.proxyFullName !== null,
+    deposit: contractData.depositValue !== null,
+    paymentParts: contractData.paymentPartsNum !== null,
+    movingOut: contractData.movingOutDate !== null,
+    utilities: contractData.utilitiesPaid !== null,
+  };
+
+  const contractInstance = await deploy();
+
+  if (optionalFlags.proxy) {
+    await contractInstance.methods.setProxy(contractData.proxyFullName, contractData.proxyPersonalId).call();
+  }
+  if (optionalFlags.deposit) {
+    await contractInstance.methods.setDeposit(contractData.depositValue, contractData.depositValueLabel).call();
+  }
+  if (optionalFlags.paymentParts) {
+    await contractInstance.methods.setPaymentPartsNum(contractData.paymentPartsNum).call();
+  }
+  if (optionalFlags.movingOut) {
+    await contractInstance.methods.setMovingOutDate(contractData.movingOutDate).call();
+  }
+
+  return contractInstance.options.address;
 }
 
 module.exports = {

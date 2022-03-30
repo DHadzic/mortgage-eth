@@ -49,19 +49,24 @@ const mapToArguments = (contractData) => {
         [
             contractData.seller.fullName,
             contractData.seller.addressStreet,
-            contractData.seller.addressCity
+            contractData.seller.addressCity,
+            contractData.seller.personalId,
+            contractData.seller.mupId,
         ],
         [
             contractData.buyer.fullName,
             contractData.buyer.addressStreet,
-            contractData.buyer.addressCity
+            contractData.buyer.addressCity,
+            contractData.buyer.personalId,
+            contractData.buyer.mupId,
         ],
         contractData.totalPrice,
         contractData.basePrice,
         contractData.basePriceLabel,
+        contractData.address,
         contractData.conclusionDate,
         contractData.conclusionAddress,
-        contractData.taxPayer,
+        +(contractData.taxPayer === 'BUYER'),
         contractData.courtInJurisdiction
     ];
 }
@@ -72,6 +77,7 @@ const validateBody = (contractData) => {
         'seller',
         'buyer',
         'totalPrice',
+        'address',
         'basePrice',
         'basePriceLabel',
         'conclusionDate',
@@ -84,6 +90,8 @@ const validateBody = (contractData) => {
         'fullName',
         'addressStreet',
         'addressCity',
+        'personalId',
+        'mupId',
     ];
 
     Object.keys(contractData).forEach((key) => {
@@ -114,41 +122,47 @@ const populateContractData = (requestBody) => {
             fullName: requestBody.seller.fullName,
             addressStreet: requestBody.seller.addressStreet,
             addressCity: requestBody.seller.addressCity,
+            personalId: requestBody.seller.personalId,
+            mupId: requestBody.seller.mupId,
         },
         buyer: {
             fullName: requestBody.buyer.fullName,
             addressStreet: requestBody.buyer.addressStreet,
             addressCity: requestBody.buyer.addressCity,
+            personalId: requestBody.buyer.personalId,
+            mupId: requestBody.buyer.mupId,
         },
         totalPrice: requestBody.basePrice,
         basePrice: requestBody.basePrice,
         basePriceLabel: requestBody.basePriceLabel,
+        address: requestBody.address,
         conclusionDate: requestBody.conclusionDate,
         conclusionAddress: requestBody.conclusionAddress,
-        taxPayer: requestBody.taxPayer,
+        taxPayer: requestBody.taxPayer === 'Seller' ? 0 : 1,
         courtInJurisdiction: requestBody.courtInJurisdiction,
     };
 
-    if (requestBody.byProxy !== undefined) {
-        contractData['byProxy'] = byProxy;
+    if (requestBody.proxyFullName !== null) {
+        contractData['proxyFullName'] = requestBody.proxyFullName;
+        contractData['proxyPersonalId'] = requestBody.proxyPersonalId;
     }
 
-    if (requestBody.depositValue !== undefined && requestBody.depositValueLabel !== undefined) {
-        contractData['depositValue'] = depositValue;
-        contractSource.totalPrice += depositValue;
-        contractData['depositValueLabel'] = depositValueLabel;
+    if (requestBody.depositValue !== null && requestBody.depositValueLabel !== null) {
+        contractData['depositValue'] = requestBody.depositValue;
+        contractData['totalPrice'] += requestBody.depositValue;
+        contractData['depositValueLabel'] = requestBody.depositValueLabel;
     }
 
-    if (requestBody.paymentPartsNum !== undefined) {
-        contractData['paymentPartsNum'] = paymentPartsNum;
+    if (requestBody.paymentPartsNum !== null) {
+        contractData['paymentPartsNum'] = requestBody.paymentPartsNum;
     }
 
-    if (requestBody.movingOutDate !== undefined) {
-        contractData['movingOutDate'] = movingOutDate;
+    if (requestBody.movingOutDate !== null) {
+        contractData['movingOutDate'] = requestBody.movingOutDate;
     }
 
-    if (requestBody.utilitiesPaid !== undefined) {
-        contractData['utilitiesPaid'] = utilitiesPaid;
+    if (requestBody.utilitiesPaid !== null) {
+        contractData['utilitiesPaid'] = requestBody.utilitiesPaid;
     }
 
     return contractData;

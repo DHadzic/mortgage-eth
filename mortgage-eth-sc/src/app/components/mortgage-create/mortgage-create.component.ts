@@ -16,22 +16,27 @@ export class MortgageCreateComponent implements OnInit {
     basePrice: new FormControl(null, Validators.required),
     basePriceLabel: new FormControl(null, Validators.required),
     area: new FormControl(null, Validators.required),
+    address: new FormControl(null, Validators.required),
     buyer: new FormGroup({
       fullName: new FormControl(null, Validators.required),
       addressStreet: new FormControl(null, Validators.required),
       addressCity: new FormControl(null, Validators.required),
+      personalId: new FormControl(null, Validators.required),
+      mupId: new FormControl(null, Validators.required),
     }),
     seller: new FormGroup({
       fullName: new FormControl(null, Validators.required),
       addressStreet: new FormControl(null, Validators.required),
       addressCity: new FormControl(null, Validators.required),
+      personalId: new FormControl(null, Validators.required),
+      mupId: new FormControl(null, Validators.required),
     }),
     conclusionDate: new FormControl(null, Validators.required),
     conclusionAddress: new FormControl(null, Validators.required),
     courtInJurisdiction: new FormControl(null, Validators.required),
     taxPayer: new FormControl(null, Validators.required),
-    byProxy: new FormControl(null),
-    depositValue: new FormControl(null),
+    proxyFullName: new FormControl(null),
+    proxyPersonalId: new FormControl(null),
     depositValueLabel: new FormControl(null),
     paymentPartsNum: new FormControl(null),
     movingOutDate: new FormControl(null),
@@ -54,16 +59,16 @@ export class MortgageCreateComponent implements OnInit {
   }
 
   public toggle(key: 'proxyActive' | 'depositActive' | 'paymentPartsActive' | 'movingOutActive' | 'utilitiesActive'): void {
-    if (key === 'proxyActive') {
-      this.mortgageForm.get('byProxy')?.setValue(this.conditionalFields[key] ? null : true);
-    }
-
     if (key === 'utilitiesActive') {
       this.mortgageForm.get('utilitiesPaid')?.setValue(this.conditionalFields[key] ? null : true);
     }
 
     if (this.conditionalFields[key]) {
       switch (key) {
+        case 'proxyActive':
+          this.mortgageForm.get('proxyFullName')?.setValue(null);
+          this.mortgageForm.get('proxyPersonalId')?.setValue(null);
+          break;
         case 'depositActive':
           this.mortgageForm.get('depositValue')?.setValue(null);
           this.mortgageForm.get('depositValueLabel')?.setValue(null);
@@ -85,7 +90,8 @@ export class MortgageCreateComponent implements OnInit {
     let valid = true;
   
     if (this.conditionalFields.proxyActive) {
-      valid = valid && mortgage.byProxy !== null;
+      valid = valid && mortgage.proxyFullName && mortgage.proxyFullName.trim().length > 0;
+      valid = valid && mortgage.proxyPersonalId && mortgage.proxyPersonalId.trim().length > 0;
     }
 
     if (this.conditionalFields.depositActive) {
@@ -126,7 +132,10 @@ export class MortgageCreateComponent implements OnInit {
     this._smartContractService.getContractPreview(mortgageData).subscribe((previewData) => {
       this._dialog.open(ContractPreviewComponent, {
         width: '1100px',
-        data: { contractSol: previewData.contractSource, contractSource: ''},
+        data: {
+          contractSol: previewData.contractSol,
+          contractSource: this._smartContractService.getContractSourcePreview(mortgageData)
+        },
       });
     });
   }
