@@ -25,6 +25,15 @@ export interface Mortgage {
     utilitiesPaid?: boolean
 }
 
+export interface ContractSourceData {
+    title: string
+    header: string
+    acts: { 
+        title: string
+        body: string
+    }[]
+}
+
 export interface OptionalFields {
     proxyActive: boolean
     depositActive: boolean

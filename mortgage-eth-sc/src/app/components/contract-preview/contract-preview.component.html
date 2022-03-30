@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Contract preview</h2>
+<div class="titles-wrapper">
+    <h1 mat-dialog-title>Solidity</h1>
+    <h1 mat-dialog-title>Source format</h1>
+</div>
+<mat-dialog-content>
+    <div class="content-wrapper">
+        <div class="content-wrapper__item-left">
+            <p>{{ leftContent }}</p>
+        </div>
+        <div class="content-wrapper__item-right">
+            <div class="title">
+                {{ rightContent?.title ?? '' }}
+            </div>       
+            <div class="header">
+                {{ rightContent?.header ?? '' }}
+            </div>
+            <div *ngFor="let act of rightContent?.acts ?? []" class="act">
+                <div class="act__title">
+                    {{ act.title }}
+                </div>       
+                <div class="act__body">
+                    {{ act.body }}
+                </div>
+            </div>
+        </div>
+    </div>    
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

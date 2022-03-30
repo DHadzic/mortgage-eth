@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SmartContractService {  
-  private _url = 'https://localhost:3000';
+  private _url = 'http://localhost:3000';
 
   constructor(private _http: HttpClient) {
   }
@@ -16,8 +16,8 @@ export class SmartContractService {
     return this._http.post<DeployedContractResponse>(this._url + '/contract', data);
   }
 
-  public getContractPreview(): Observable<ContractSourceResponse> {
-    return this._http.get<ContractSourceResponse>(this._url + '/contract-preview');
+  public getContractPreview(data: Mortgage): Observable<ContractSourceResponse> {
+    return this._http.post<ContractSourceResponse>(this._url + '/contract-preview', data);
   }
 
   // Interpolate and object with data
