@@ -37,6 +37,7 @@ export class MortgageCreateComponent implements OnInit {
     taxPayer: new FormControl(null, Validators.required),
     proxyFullName: new FormControl(null),
     proxyPersonalId: new FormControl(null),
+    depositValue: new FormControl(null),
     depositValueLabel: new FormControl(null),
     paymentPartsNum: new FormControl(null),
     movingOutDate: new FormControl(null),

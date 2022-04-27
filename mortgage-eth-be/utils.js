@@ -1,7 +1,7 @@
 const constructRequestedContract = (source, removeFlags) => {
     const contractLines = source.split('\n');
     let rowData, deleteCount;
-    
+
     for(let i = contractLines.length - 1; i >= 0; i--) {
         rowData = contractLines[i];
         if (!rowData.includes('// Option')) {
@@ -10,23 +10,23 @@ const constructRequestedContract = (source, removeFlags) => {
 
         deleteCount = 0;
         if (rowData.includes('UTILITIES_PAYMENT') && removeFlags.utilities) {
-            deleteCount = i == 199 ? 5 : i == 134 ? 5 : 2;
+            deleteCount = i == 228 ? 5 : i == 159 ? 5 : 2;
         }
 
         if (rowData.includes('MOVING_OUT_DATE') && removeFlags.movingOut) {
-            deleteCount = i == 184 ? 15 : i == 129 ? 5 : 3;
+            deleteCount = i == 213 ? 15 : i == 154 ? 5 : 3;
         }
 
         if (rowData.includes('PAYMENT_PARTS_NUMBER') && removeFlags.paymentParts) {
-            deleteCount = i == 168 ? 16 : i == 124 ? 5 : 3;
+            deleteCount = i == 197 ? 16 : i == 149 ? 5 : 3;
         }
 
         if (rowData.includes('DEPOSIT') && removeFlags.deposit) {
-            deleteCount = i == 152 ? 15 : i == 118 ? 6 : 4;
+            deleteCount = i == 181 ? 16 : i == 143 ? 6 : 4;
         }
 
         if (rowData.includes('PROXY') && removeFlags.proxy) {
-            deleteCount = i == 142 ? 10 : 2;
+            deleteCount = i == 167 ? 14 : 3;
         }
 
         if (deleteCount) {
