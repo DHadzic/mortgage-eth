@@ -8,8 +8,9 @@ Project related to Faculty of Technical Sciences subject - Law informatics
 
 ### Description
 
-Angular project with usage of [web3-eth-contract](https://github.com/ChainSafe/web3.js/tree/1.x) library for comunication with etherium network.
-
+Angular/Express project with usage of [web3-eth](https://github.com/ChainSafe/web3.js/tree/1.x) library for comunication with blockchain network.
+  
+Local blockchain network is hosted by [ganache-cli](https://github.com/trufflesuite/ganache) package.
 
 ### Features
 
