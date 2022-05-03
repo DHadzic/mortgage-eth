@@ -1,9 +1,18 @@
 const Web3 = require('web3');
 const solc = require('solc');
 const path = require('path');
-const ganache = require('ganache-cli');
 const utils = require('./utils.js');
+const storageHelper = require('./storageHelper.js');
 const fs = require('fs');
+
+const web3 = new Web3();
+
+// For running new Ganache server with every server start
+// const ganache = require('ganache-cli');
+// web3.setProvider(ganache.provider());
+
+// For connecting to already running Ganache server
+web3.setProvider('http://localhost:8545');
 
 const findImports = (p) => {
     const contractPath = path.resolve(__dirname, 'node_modules/' + p);
@@ -56,14 +65,9 @@ const deployContract = async (contract, contractData) => {
   const abi = contractFile.abi;
 
   const constructorArgs = utils.mapToArguments(contractData);
-
-  let web3 = new Web3();
-  web3.setProvider(ganache.provider());
   const accounts = await web3.eth.getAccounts();
 
   const deploy = async() => {
-
-      console.log('Deploy from account:', accounts[0]);
       const incrementer = new web3.eth.Contract(abi);
       const contractTransaction = await incrementer.deploy({
           data: bytecode,
@@ -80,36 +84,48 @@ const deployContract = async (contract, contractData) => {
       });
 
       console.log('Contract address -> ', contractInstance.options.address);
+      storageHelper.storeAddress(contractInstance.options.address);
+
       return contractInstance;
   };
 
   const optionalFlags = {
-    proxy: contractData.proxyFullName !== null,
-    deposit: contractData.depositValue !== null,
-    paymentParts: contractData.paymentPartsNum !== null,
-    movingOut: contractData.movingOutDate !== null,
-    utilities: contractData.utilitiesPaid !== null,
+    proxy: contractData.proxyFullName !== undefined,
+    deposit: contractData.depositValue !== undefined,
+    paymentParts: contractData.paymentPartsNum !== undefined,
+    movingOut: contractData.movingOutDate !== undefined,
+    utilities: contractData.utilitiesPaid !== undefined,
   };
 
   const contractInstance = await deploy();
 
-  if (optionalFlags.proxy) {
-    await contractInstance.methods.setProxy(contractData.proxyFullName, contractData.proxyPersonalId).call();
-  }
-  if (optionalFlags.deposit) {
-    await contractInstance.methods.setDeposit(contractData.depositValue, contractData.depositValueLabel).call();
-  }
-  if (optionalFlags.paymentParts) {
-    await contractInstance.methods.setPaymentPartsNum(contractData.paymentPartsNum).call();
-  }
-  if (optionalFlags.movingOut) {
-    await contractInstance.methods.setMovingOutDate(contractData.movingOutDate).call();
+  try {
+    if (optionalFlags.proxy) {
+      await contractInstance.methods.setProxy(contractData.proxyFullName, contractData.proxyPersonalId).call();
+    }
+    if (optionalFlags.deposit) {
+      await contractInstance.methods.setDeposit(contractData.depositValue, contractData.depositValueLabel).call();
+    }
+    if (optionalFlags.paymentParts) {
+      await contractInstance.methods.setPaymentPartsNum(contractData.paymentPartsNum).call();
+    }
+    if (optionalFlags.movingOut) {
+      await contractInstance.methods.setMovingOutDate(contractData.movingOutDate).call();
+    }  
+  } catch {
+    console.error('Method invocation went wrong!');
   }
 
   return contractInstance.options.address;
 }
 
+const handleStorage = async () => {
+  const accounts = await web3.eth.getAccounts();
+  storageHelper.handleStorageFile(accounts[0]);
+}
+
 module.exports = {
   getContract,
   deployContract,
+  handleStorage,
 }

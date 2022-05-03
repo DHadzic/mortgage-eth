@@ -50,7 +50,7 @@ export interface OptionalFields {
 }
 
 export interface DeployedContractResponse {
-    contactAddress: string
+    contractAddress: string
 }
 
 export interface ContractSourceResponse {

@@ -2,14 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const contractHelper = require('./contractHelper.js');
-const utils = require('./utils.js');
-
+const contractHelper = require('./helpers/contractHelper.js');
+const storageHelper = require('./helpers/storageHelper.js');
+const utils = require('./helpers/utils.js');
 
 const app = express()
 app.use(cors());
 app.use(bodyParser.json());
-const port = 3000
+const port = 3000;
+
+contractHelper.handleStorage();
 
 app.post('/contract', async (req, res) => {
     const isBodyValid = utils.validateBody(req.body);
@@ -25,7 +27,9 @@ app.post('/contract', async (req, res) => {
 });
 
 app.get('/contracts', (req, res) => {
-    // Return all stored addresses
+    const addresses = storageHelper.getAddresses();
+
+    res.status(200).json(addresses);
 });
 
 app.post('/contract-preview', (req, res) => {
@@ -34,5 +38,5 @@ app.post('/contract-preview', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Mortgage app - started on port : ${port}`);
 })

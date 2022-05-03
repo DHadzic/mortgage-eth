@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { OptionalFields, Mortgage } from 'src/app/services/smart-contract/smart-contract.service.d';
+import { OptionalFields, Mortgage, DeployedContractResponse } from 'src/app/services/smart-contract/smart-contract.service.d';
 import { SmartContractService } from 'src/app/services/smart-contract/smart-contract.service';
 import { ContractPreviewComponent } from '../contract-preview/contract-preview.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-mortgage-create',
   templateUrl: './mortgage-create.component.html',
   styleUrls: ['./mortgage-create.component.scss']
 })
-export class MortgageCreateComponent implements OnInit {
+export class MortgageCreateComponent {
   public mortgageForm: FormGroup = new FormGroup({
     propertyId: new FormControl(null, Validators.required),
     basePrice: new FormControl(null, Validators.required),
@@ -53,11 +54,9 @@ export class MortgageCreateComponent implements OnInit {
 
   constructor(
     private _smartContractService: SmartContractService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar, 
     ) {}
-
-  public ngOnInit(): void {
-  }
 
   public toggle(key: 'proxyActive' | 'depositActive' | 'paymentPartsActive' | 'movingOutActive' | 'utilitiesActive'): void {
     if (key === 'utilitiesActive') {
@@ -125,7 +124,14 @@ export class MortgageCreateComponent implements OnInit {
     }
 
     const mortgageData = this.mortgageForm.value as Mortgage;
-    this._smartContractService.deployContract(mortgageData).subscribe(console.log);
+    this._smartContractService.deployContract(mortgageData).subscribe({
+      next: (data: DeployedContractResponse) => {
+        this._showSnackBar(`Contract deployed at address: ${data.contractAddress}`);
+      },
+      error: () => {
+        this._showSnackBar('Deploy was not successful');
+      }
+    });
   }
 
   public preview(): void {
@@ -139,5 +145,9 @@ export class MortgageCreateComponent implements OnInit {
         },
       });
     });
+  }
+
+  private _showSnackBar(message: string): void {
+    this._snackBar.open(message, 'Close', { duration: 50000 });
   }
 }
