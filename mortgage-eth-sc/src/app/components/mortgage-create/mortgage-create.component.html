@@ -1,6 +1,6 @@
 <form class="form" [formGroup]="mortgageForm">
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Conclusion informations
         </label>
         <div class="section__form-group">
@@ -25,15 +25,17 @@
             <label>
                 Tax payer
             </label>
-            <input type="radio" id="html" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']" value="Buyer">
+            <input type="radio" id="html" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']"
+                value="Buyer">
             <label for="html">Buyer</label>
-            <input type="radio" id="css" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']" value="Seller">
+            <input type="radio" id="css" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']"
+                value="Seller">
             <label for="css">Seller</label>
         </div>
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Seller details
         </label>
         <div class="section__form-group">
@@ -69,7 +71,7 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Buyer details
         </label>
         <div class="section__form-group">
@@ -105,7 +107,7 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Property details
         </label>
         <div class="section__form-group">
@@ -141,10 +143,11 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Is by third person (optional)
         </label>
-        <button class="visibility-button" type="button" (click)="toggle('proxyActive')">{{ conditionalFields.proxyActive ? 'Remove' : 'Add' }}</button>
+        <button class="visibility-button" type="button" (click)="toggle('proxyActive')">{{ conditionalFields.proxyActive
+            ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
             <label>
                 T.P person full name
@@ -160,10 +163,11 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Use deposit (optional)
         </label>
-        <button class="visibility-button" type="button" (click)="toggle('depositActive')">{{ conditionalFields.depositActive ? 'Remove' : 'Add' }}</button>
+        <button class="visibility-button" type="button" (click)="toggle('depositActive')">{{
+            conditionalFields.depositActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.depositActive" class="section__form-group">
             <label>
                 Deposit value (number)
@@ -179,10 +183,11 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Pay in parts (optional)
         </label>
-        <button class="visibility-button" type="button" (click)="toggle('paymentPartsActive')">{{ conditionalFields.paymentPartsActive ? 'Remove' : 'Add' }}</button>
+        <button class="visibility-button" type="button" (click)="toggle('paymentPartsActive')">{{
+            conditionalFields.paymentPartsActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.paymentPartsActive" class="section__form-group">
             <label>
                 Number of parts
@@ -192,10 +197,11 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Move out date (optional)
         </label>
-        <button class="visibility-button" type="button" (click)="toggle('movingOutActive')">{{ conditionalFields.movingOutActive ? 'Remove' : 'Add' }}</button>
+        <button class="visibility-button" type="button" (click)="toggle('movingOutActive')">{{
+            conditionalFields.movingOutActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.movingOutActive" class="section__form-group">
             <label>
                 Date to move out
@@ -205,10 +211,11 @@
     </div>
 
     <div class="section">
-        <label class ="title">
+        <label class="title">
             Utilities payment (optional)
         </label>
-        <button class="visibility-button" type="button" (click)="toggle('utilitiesActive')">{{ conditionalFields.utilitiesActive ? 'Remove' : 'Add' }}</button>
+        <button class="visibility-button" type="button" (click)="toggle('utilitiesActive')">{{
+            conditionalFields.utilitiesActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.utilitiesActive" class="section__form-group">
             <label>
                 Seller will have to pay the utilities before the property is delegated
@@ -222,6 +229,6 @@
         </button>
         <button type="button" (click)="onSubmit()">
             Deploy to ETH
-        </button>        
+        </button>
     </div>
 </form>

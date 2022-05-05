@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { DeployedContractResponse, ContractSourceResponse, Mortgage, DeployedContractData, ContractSourceData } from './smart-contract.service.d';
+import { DeployedContractResponse, ContractSourceResponse, Mortgage, ContractSourceData, MortgageMethods } from './smart-contract.service.d';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MortgageABI } from './smart-contract.service.data'
+import { AbiItem } from 'web3-utils';
+import Web3 from 'web3';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +12,7 @@ import { Observable } from 'rxjs';
 export class SmartContractService {  
   private _url = 'http://localhost:3000';
 
-  constructor(private _http: HttpClient) {
-  }
+  constructor(private _http: HttpClient) {}
 
   public deployContract(data: Mortgage): Observable<DeployedContractResponse> {
     return this._http.post<DeployedContractResponse>(this._url + '/contract', data);
@@ -154,7 +156,25 @@ export class SmartContractService {
     return contractSourceData;
   }
 
-  public getContractsAddresses(): Observable<DeployedContractData[]> {
-    return this._http.get<DeployedContractData[]>(this._url + '/contracts');
+  public getContractsAddresses(): Observable<string[]> {
+    return this._http.get<string[]>(this._url + '/contracts');
+  }
+
+  public async getContractData(address: string): Promise<any> {
+    if (!address) {
+      return
+    }
+
+    const web3 = new Web3();
+    web3.setProvider('http://localhost:8545');
+    const contract = new web3.eth.Contract(MortgageABI as AbiItem[], address);
+
+    console.log(contract.methods)
+    const buyerInfoCall =  await (contract.methods as MortgageMethods).getBuyerInfo();
+    console.log(buyerInfoCall);
+
+    // To get data
+    const buyerInfo = await buyerInfoCall.call(null);
+    console.log(buyerInfo);
   }
 }

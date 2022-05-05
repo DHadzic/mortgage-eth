@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -31,6 +31,7 @@ import { MatCommonModule } from '@angular/material/core';
     MatSnackBarModule,
     MatCommonModule,
     FormsModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     SmartContractService,

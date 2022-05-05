@@ -46,6 +46,11 @@
             width: 100%;
             padding: 10px 30px;
 
+            label {
+                font-size: 16px;
+                font-weight: 550;
+            }
+
             input[type="text"],
             input[type="number"] {
                 width: 280px;

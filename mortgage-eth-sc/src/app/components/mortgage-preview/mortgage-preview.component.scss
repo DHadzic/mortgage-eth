@@ -1,0 +1,113 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+::ng-deep mat-spinner {
+    height: 50px !important;
+    width: 50px !important;
+
+    svg {
+        height: 50px !important;
+        width: 50px !important;
+
+        circle {
+            stroke: lightgray !important;
+        }
+    }
+}
+
+.address-wrapper {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 300px;
+    height: calc(100% - 250px);
+    left: 30px;
+    top: 125px;
+    z-index: 100;
+    background-color: #f2f3f5;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
+    .title {
+        margin: 40px 0;
+        font-size: 26px;
+        font-weight: 500;
+    }
+    
+    .addresses {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        overflow-y: auto;
+        font-size: 18px;
+
+        .address {
+            width: calc(100% - 46px);
+            padding: 7px 14px;
+            margin: 7px;
+            font-weight: 500;
+            border: 1.6px solid darkgray;
+            border-radius: 5px;
+            text-align: center;
+            overflow-wrap: break-word;
+
+            &:hover {
+                background-color: white;
+            }
+        }  
+    }
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: max-content;
+    padding-bottom: 30px;
+    flex-direction: column;
+    align-items: center;
+
+    .section {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 500px;
+        min-height: 150px;
+        padding: 5%;
+        margin: 20px 0;
+        background-color: #f2f3f5;
+        border-radius: 12px;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
+        .title {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .section__form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 30px;
+
+            label {
+                width: 100%;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 550;
+            }
+        }
+    }
+}
+

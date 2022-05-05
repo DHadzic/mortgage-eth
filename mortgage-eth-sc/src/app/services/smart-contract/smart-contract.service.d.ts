@@ -25,7 +25,7 @@ export interface Mortgage {
     proxyFullName?: string
     proxyPersonalId?: string
     depositValue?: number
-    depositValueLabel?: number
+    depositValueLabel?: string
     paymentPartsNum?: number
     movingOutDate?: string
     utilitiesPaid?: boolean
@@ -57,6 +57,15 @@ export interface ContractSourceResponse {
     contractSol: string
 }
 
-export interface DeployedContractData {
-    contractAddress: string
+export interface MortgageMethods {
+    getSellerInfo: () => Promise<Function>,
+    getBuyerInfo: () => Promise<Function>,
+    getConclusionDate: () => Promise<Function>,
+    getConclusionAddress: () => Promise<Function>,
+    getTaxPayer: () => Promise<Function>,
+    getCourtInJurisdiction: () => Promise<Function>,
+    getProxy: () => Promise<Function>,
+    getDepositValue: () => Promise<Function>,
+    getPaymentPartsNum: () => Promise<Function>,
+    getMovingOutDate: () => Promise<Function>,
 }

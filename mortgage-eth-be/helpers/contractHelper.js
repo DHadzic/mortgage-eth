@@ -15,7 +15,7 @@ const web3 = new Web3();
 web3.setProvider('http://localhost:8545');
 
 const findImports = (p) => {
-    const contractPath = path.resolve(__dirname, 'node_modules/' + p);
+    const contractPath = path.resolve(__dirname, '../node_modules/' + p);
     return {
         contents:
           fs.readFileSync(contractPath, 'utf8')  
@@ -31,7 +31,7 @@ const getContract = (contractData) => {
       utilities: contractData.utilitiesPaid === null,
   };
 
-  const contractPath = path.resolve(__dirname, 'Mortgage.sol');
+  const contractPath = path.resolve(__dirname, '../Mortgage.sol');
   const source = utils.constructRequestedContract(fs.readFileSync(contractPath, 'utf8'), removeFlags);
 
   return source
@@ -120,7 +120,13 @@ const deployContract = async (contract, contractData) => {
 }
 
 const handleStorage = async () => {
-  const accounts = await web3.eth.getAccounts();
+  let accounts = [];
+  try {
+    accounts = await web3.eth.getAccounts();
+  } catch {
+    console.log('ERR: Ganache server not started');
+    process.exit();
+  }
   storageHelper.handleStorageFile(accounts[0]);
 }
 
