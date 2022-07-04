@@ -15,7 +15,7 @@
 <div class="wrapper">
     <ng-container *ngIf="mortgageData$ | async as mortgageData;else empty">
         <div class="section">
-            <ng-container *ngIf="!isLoading; else loader">
+            <ng-container>
                 <label class="title">
                     Conclusion informations
                 </label>
@@ -41,13 +41,13 @@
                     <label>
                         Tax payer
                     </label>
-                    <label> {{ mortgageData.taxPayer === 'BUYER' ? 'Buyer' : 'Seller' }}</label>
+                    <label> {{ mortgageData.taxPayer === 'BUYER' ? 'Buyer' : 'Seller' }} </label>
                 </div>
             </ng-container>
         </div>
 
         <div class="section">
-            <ng-container *ngIf="!isLoading; else loader">
+            <ng-container>
                 <label class="title">
                     Seller details
                 </label>
@@ -85,7 +85,7 @@
         </div>
 
         <div class="section">
-            <ng-container *ngIf="!isLoading; else loader">
+            <ng-container>
                 <label class="title">
                     Buyer details
                 </label>
@@ -123,7 +123,7 @@
         </div>
 
         <div class="section">
-            <ng-container *ngIf="!isLoading; else loader">
+            <ng-container>
                 <label class="title">
                     Property details
                 </label>
@@ -160,7 +160,7 @@
             </ng-container>
         </div>
 
-        <div class="section" *ngIf="conditionalFields.proxyActive">
+        <div class="section" *ngIf="mortgageData.proxyFullName !== undefined">
             <label class="title">
                 Is by third person (optional)
             </label>
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <div class="section" *ngIf="conditionalFields.depositActive">
+        <div class="section" *ngIf="mortgageData.depositValue !== undefined">
             <label class="title">
                 Use deposit (optional)
             </label>
@@ -196,7 +196,7 @@
             </div>
         </div>
 
-        <div class="section" *ngIf="conditionalFields.paymentPartsActive">
+        <div class="section" *ngIf="mortgageData.paymentPartsNum !== undefined">
             <label class="title">
                 Pay in parts (optional)
             </label>
@@ -208,7 +208,7 @@
             </div>
         </div>
 
-        <div class="section" *ngIf="conditionalFields.movingOutActive">
+        <div class="section" *ngIf="mortgageData.movingOutDate !== undefined">
             <label class="title">
                 Move out date (optional)
             </label>
@@ -220,17 +220,16 @@
             </div>
         </div>
 
-        <div class="section" *ngIf="conditionalFields.utilitiesActive">
+        <div class="section" *ngIf="mortgageData.utilitiesPaid !== undefined">
             <label class="title">
+                Utilities
+            </label>
+            <label>
                 Seller will have to pay the utilities before the property is delegated
             </label>
         </div>
     </ng-container>
 </div>
-
-<ng-template #loader>
-    <mat-spinner></mat-spinner>
-</ng-template>
 
 <ng-template #empty>
     <div class="section">

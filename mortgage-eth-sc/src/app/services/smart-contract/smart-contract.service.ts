@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeployedContractResponse, ContractSourceResponse, Mortgage, ContractSourceData, MortgageMethods } from './smart-contract.service.d';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MortgageABI } from './smart-contract.service.data'
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
@@ -11,11 +11,11 @@ import Web3 from 'web3';
 })
 export class SmartContractService {  
   private _url = 'http://localhost:3000';
-  private _mortgageData$: BehaviorSubject<Mortgage | null>;
+  private _mortgageData$: Subject<Mortgage | null>;
   public mortgageData$: Observable<Mortgage | null>;
 
   constructor(private _http: HttpClient) {
-    this._mortgageData$ = new BehaviorSubject<Mortgage | null>(null);
+    this._mortgageData$ = new Subject<Mortgage | null>();
     this.mortgageData$ = this._mortgageData$.asObservable();
   }
 
@@ -96,7 +96,7 @@ export class SmartContractService {
 
       let act = {
         title: `Član ${ additionalActStart }.`,
-        body: `Proxy text`,
+        body: `Ugovorne strane su saglasne da će se kupoprodaja nepokretnosti vršiti uz pomoć posrednika ${ data.proxyFullName }, JMBG ${ data.proxyPersonalId }`,
       };
 
       acts.splice(additionalActStart - 1, 0, act);
@@ -107,7 +107,7 @@ export class SmartContractService {
 
       let act = {
         title: `Član ${ additionalActStart }.`,
-        body: `Deposit text`,
+        body: `Prilikom realizacije potpisivanja ugovora, kupac je isplatio depozit u iznosu od ${ data.depositValue } (slovima: ${ data.depositValueLabel }).`,
       };
 
       acts.splice(additionalActStart - 1, 0, act);
@@ -118,7 +118,7 @@ export class SmartContractService {
 
       let act = {
         title: `Član ${ additionalActStart }.`,
-        body: `Payment parts text`,
+        body: `Radi olakšanog isplaćivanja predmetne nepokretnosti, kupcu je omogucena isplata u ${ data.paymentPartsNum } delova.`,
       };
 
       acts.splice(additionalActStart - 1, 0, act);
@@ -129,7 +129,7 @@ export class SmartContractService {
 
       let act = {
         title: `Član ${ additionalActStart }.`,
-        body: `Moving out date text`,
+        body: `Prodavac je dužan da predmetnu nepokretnost napusti najkasnije do ${ data.movingOutDate }.`,
       };
 
       acts.splice(additionalActStart - 1, 0, act);
@@ -140,7 +140,7 @@ export class SmartContractService {
 
       let act = {
         title: `Član ${ additionalActStart }.`,
-        body: `Utilities text`,
+        body: `Nakon iseljavanja, prodavca je odgovoran da reguliše sve zaostatke plaćanja rezija.`,
       };
 
       acts.splice(additionalActStart - 1, 0, act);
@@ -165,7 +165,7 @@ export class SmartContractService {
     return this._http.get<string[]>(this._url + '/contracts');
   }
 
-  public async getContractData(address: string): Promise<boolean> {
+  public async getContractData(address: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       if (!address) {
         return
@@ -220,15 +220,13 @@ export class SmartContractService {
           utilities = await sattleUtilitiesPaymentFn.call(null);
         } catch {}
     
-        // console.log({ buyerInfo, sellerInfo, propertyInfo, conclusionDate, conclusionAddress, taxPayer, courtInJurisdiction });        
-        // console.log({ proxy, depositValue, paymentPartsNum, movingOutDate, utilities });
-
         const buyerInfoList = (buyerInfo as string).split('-');
         const sellerInfoList = (sellerInfo as string).split('-');
         const propertyInfoList = (propertyInfo as string).split('-');
 
         if (buyerInfoList.length !== 5 || sellerInfoList.length !== 5 || propertyInfoList.length !== 5) {
-          console.log('ERROR IN LISTS');
+          console.error('Error parsing lists');
+          reject();
         }
 
         const contractData: Mortgage = {
@@ -256,7 +254,7 @@ export class SmartContractService {
           conclusionDate,
           conclusionAddress,
           courtInJurisdiction,
-          taxPayer: taxPayer == 1 ? 'BUYER' : 'SELLER',
+          taxPayer: taxPayer === 'buyer' ? 'BUYER' : 'SELLER',
         }
 
         if (proxy) {
@@ -266,7 +264,7 @@ export class SmartContractService {
         }
 
         if (depositValue) {
-          const depositValueList = proxy.split('-');
+          const depositValueList = depositValue.split('-');
           contractData.depositValue = depositValueList[0].trim();
           contractData.depositValueLabel = depositValueList[1].trim();          
         }
@@ -285,9 +283,10 @@ export class SmartContractService {
 
         this._mortgageData$.next(contractData);
   
-        resolve(true);  
+        resolve();  
       } catch (err) {
-        reject(false);
+        console.error(err);
+        reject();
       }
     })
   }

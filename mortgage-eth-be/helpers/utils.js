@@ -10,15 +10,15 @@ const constructRequestedContract = (source, removeFlags) => {
 
         deleteCount = 0;
         if (rowData.includes('UTILITIES_PAYMENT') && removeFlags.utilities) {
-            deleteCount = i == 266 ? 13 : i == 186 ? 5 : 2;
+            deleteCount = i == 269 ? 13 : i == 186 ? 5 : 2;
         }
 
         if (rowData.includes('MOVING_OUT_DATE') && removeFlags.movingOut) {
-            deleteCount = i == 248 ? 18 : i == 181 ? 5 : 3;
+            deleteCount = i == 251 ? 18 : i == 181 ? 5 : 3;
         }
 
         if (rowData.includes('PAYMENT_PARTS_NUMBER') && removeFlags.paymentParts) {
-            deleteCount = i == 230 ? 18 : i == 176 ? 5 : 3;
+            deleteCount = i == 233 ? 18 : i == 176 ? 5 : 3;
         }
 
         if (rowData.includes('DEPOSIT') && removeFlags.deposit) {
@@ -71,7 +71,7 @@ const mapToArguments = (contractData) => {
         contractData.totalPrice,
         contractData.conclusionDate,
         contractData.conclusionAddress,
-        +(contractData.taxPayer === 'BUYER'),
+        contractData.taxPayer === 0 ? 1 : 0,
         contractData.courtInJurisdiction
     ];
 }

@@ -5,6 +5,7 @@ import { SmartContractService } from 'src/app/services/smart-contract/smart-cont
 import { ContractPreviewComponent } from '../contract-preview/contract-preview.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mortgage-create',
@@ -57,7 +58,8 @@ export class MortgageCreateComponent {
   constructor(
     private _smartContractService: SmartContractService,
     private _dialog: MatDialog,
-    private _snackBar: MatSnackBar, 
+    private _snackBar: MatSnackBar,
+    private _router: Router,
     ) {}
 
   public toggle(key: 'proxyActive' | 'depositActive' | 'paymentPartsActive' | 'movingOutActive' | 'utilitiesActive'): void {
@@ -129,6 +131,7 @@ export class MortgageCreateComponent {
     this._smartContractService.deployContract(mortgageData).subscribe({
       next: (data: DeployedContractResponse) => {
         this._showSnackBar(`Contract deployed at address: ${data.contractAddress}`);
+        this._router.navigateByUrl('/');
       },
       error: () => {
         this._showSnackBar('Deploy was not successful');
@@ -150,6 +153,6 @@ export class MortgageCreateComponent {
   }
 
   private _showSnackBar(message: string): void {
-    this._snackBar.open(message, 'Close', { duration: 50000 });
+    this._snackBar.open(message, 'Close', { duration: 3500 });
   }
 }

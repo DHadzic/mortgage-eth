@@ -319,9 +319,9 @@ export const MortgageABI = [
 		"name": "getDepositValue",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",

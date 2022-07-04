@@ -217,10 +217,13 @@ contract Mortgage is ERC721 {
         _depositValueLabel = deposit_value_label;
     }
 
-    function getDepositValue() public view returns(uint256) {
+    function getDepositValue() public view returns(string memory) {
         assert(_depositValue != 0);
 
-        return _depositValue;
+        return string(abi.encodePacked(
+            Strings.toString(_depositValue)," - ",
+            _depositValueLabel)
+        );
     }
 
     function payDeposit() public {
