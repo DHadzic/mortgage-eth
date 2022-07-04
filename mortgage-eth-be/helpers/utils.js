@@ -10,23 +10,23 @@ const constructRequestedContract = (source, removeFlags) => {
 
         deleteCount = 0;
         if (rowData.includes('UTILITIES_PAYMENT') && removeFlags.utilities) {
-            deleteCount = i == 228 ? 5 : i == 159 ? 5 : 2;
+            deleteCount = i == 266 ? 13 : i == 186 ? 5 : 2;
         }
 
         if (rowData.includes('MOVING_OUT_DATE') && removeFlags.movingOut) {
-            deleteCount = i == 213 ? 15 : i == 154 ? 5 : 3;
+            deleteCount = i == 248 ? 18 : i == 181 ? 5 : 3;
         }
 
         if (rowData.includes('PAYMENT_PARTS_NUMBER') && removeFlags.paymentParts) {
-            deleteCount = i == 197 ? 16 : i == 149 ? 5 : 3;
+            deleteCount = i == 230 ? 18 : i == 176 ? 5 : 3;
         }
 
         if (rowData.includes('DEPOSIT') && removeFlags.deposit) {
-            deleteCount = i == 181 ? 16 : i == 143 ? 6 : 4;
+            deleteCount = i == 212 ? 18 : i == 170 ? 6 : 4;
         }
 
         if (rowData.includes('PROXY') && removeFlags.proxy) {
-            deleteCount = i == 167 ? 14 : 3;
+            deleteCount = i == 194 ? 18 : 3;
         }
 
         if (deleteCount) {
@@ -45,7 +45,7 @@ const constructRequestedContract = (source, removeFlags) => {
 
 const mapToArguments = (contractData) => {
     return [
-        contractData.propertyId,
+        contractData.property.propertyId,
         [
             contractData.seller.fullName,
             contractData.seller.addressStreet,
@@ -60,10 +60,15 @@ const mapToArguments = (contractData) => {
             contractData.buyer.personalId,
             contractData.buyer.mupId,
         ],
+        [
+            contractData.property.propertyId,
+            contractData.property.address,
+            contractData.property.area,
+            contractData.property.basePrice,
+            contractData.property.basePriceLabel,
+    
+        ],
         contractData.totalPrice,
-        contractData.basePrice,
-        contractData.basePriceLabel,
-        contractData.address,
         contractData.conclusionDate,
         contractData.conclusionAddress,
         +(contractData.taxPayer === 'BUYER'),
@@ -73,13 +78,10 @@ const mapToArguments = (contractData) => {
 
 const validateBody = (contractData) => {
     const keys = [
-        'propertyId',
         'seller',
         'buyer',
+        'property',
         'totalPrice',
-        'address',
-        'basePrice',
-        'basePriceLabel',
         'conclusionDate',
         'conclusionAddress',
         'taxPayer',
@@ -92,6 +94,14 @@ const validateBody = (contractData) => {
         'addressCity',
         'personalId',
         'mupId',
+    ];
+
+    const propertyKeys = [
+        'propertyId',
+        'address',
+        'area',
+        'basePrice',
+        'basePriceLabel',
     ];
 
     Object.keys(contractData).forEach((key) => {
@@ -117,7 +127,6 @@ const validateBody = (contractData) => {
 
 const populateContractData = (requestBody) => {
     const contractData = {
-        propertyId: requestBody.propertyId,
         seller: {
             fullName: requestBody.seller.fullName,
             addressStreet: requestBody.seller.addressStreet,
@@ -132,10 +141,14 @@ const populateContractData = (requestBody) => {
             personalId: requestBody.buyer.personalId,
             mupId: requestBody.buyer.mupId,
         },
-        totalPrice: requestBody.basePrice,
-        basePrice: requestBody.basePrice,
-        basePriceLabel: requestBody.basePriceLabel,
-        address: requestBody.address,
+        property: {
+            propertyId: requestBody.property.propertyId,
+            address: requestBody.property.address,
+            area: requestBody.property.area,
+            basePrice: requestBody.property.basePrice,
+            basePriceLabel: requestBody.property.basePriceLabel,
+        },
+        totalPrice: requestBody.property.basePrice,
         conclusionDate: requestBody.conclusionDate,
         conclusionAddress: requestBody.conclusionAddress,
         taxPayer: requestBody.taxPayer === 'Seller' ? 0 : 1,

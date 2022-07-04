@@ -4,25 +4,25 @@
             Conclusion informations
         </label>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Conclusion date
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['conclusionDate']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Conclusion address
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['conclusionAddress']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Court in jurisdiction
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['courtInJurisdiction']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Tax payer
             </label>
             <input type="radio" id="html" name="taxPayer" [formControl]="$any(mortgageForm).controls['taxPayer']"
@@ -39,31 +39,31 @@
             Seller details
         </label>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Full name
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['fullName']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Address street
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['addressStreet']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Address city
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['addressCity']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Personal id (JMBG)
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['personalId']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 MUP id
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['seller'].controls['mupId']">
@@ -75,31 +75,31 @@
             Buyer details
         </label>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Full name
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['fullName']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Address street
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['addressStreet']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Address city
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['addressCity']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Personal id (JMBG)
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['personalId']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 MUP id
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['buyer'].controls['mupId']">
@@ -111,34 +111,34 @@
             Property details
         </label>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Identification number
             </label>
-            <input type="number" [formControl]="$any(mortgageForm).controls['propertyId']">
+            <input type="number" [formControl]="$any(mortgageForm).controls['property'].controls['propertyId']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Address
             </label>
-            <input type="text" [formControl]="$any(mortgageForm).controls['address']">
+            <input type="text" [formControl]="$any(mortgageForm).controls['property'].controls['address']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Area (number)
             </label>
-            <input type="number" [formControl]="$any(mortgageForm).controls['area']">
+            <input type="number" [formControl]="$any(mortgageForm).controls['property'].controls['area']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Price (number - RSD)
             </label>
-            <input type="number" [formControl]="$any(mortgageForm).controls['basePrice']">
+            <input type="number" [formControl]="$any(mortgageForm).controls['property'].controls['basePrice']">
         </div>
         <div class="section__form-group">
-            <label>
+            <label class="required">
                 Price (label)
             </label>
-            <input type="text" [formControl]="$any(mortgageForm).controls['basePriceLabel']">
+            <input type="text" [formControl]="$any(mortgageForm).controls['property'].controls['basePriceLabel']">
         </div>
     </div>
 
@@ -149,13 +149,13 @@
         <button class="visibility-button" type="button" (click)="toggle('proxyActive')">{{ conditionalFields.proxyActive
             ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
-            <label>
+            <label class="required">
                 T.P person full name
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['proxyFullName']">
         </div>
         <div *ngIf="conditionalFields.proxyActive" class="section__form-group">
-            <label>
+            <label class="required">
                 T.P person id (JMBG)
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['proxyPersonalId']">
@@ -169,13 +169,13 @@
         <button class="visibility-button" type="button" (click)="toggle('depositActive')">{{
             conditionalFields.depositActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.depositActive" class="section__form-group">
-            <label>
+            <label class="required">
                 Deposit value (number)
             </label>
             <input type="number" [formControl]="$any(mortgageForm).controls['depositValue']">
         </div>
         <div *ngIf="conditionalFields.depositActive" class="section__form-group">
-            <label>
+            <label class="required">
                 Deposit value (label)
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['depositValueLabel']">
@@ -189,7 +189,7 @@
         <button class="visibility-button" type="button" (click)="toggle('paymentPartsActive')">{{
             conditionalFields.paymentPartsActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.paymentPartsActive" class="section__form-group">
-            <label>
+            <label class="required">
                 Number of parts
             </label>
             <input type="number" [formControl]="$any(mortgageForm).controls['paymentPartsNum']">
@@ -203,7 +203,7 @@
         <button class="visibility-button" type="button" (click)="toggle('movingOutActive')">{{
             conditionalFields.movingOutActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.movingOutActive" class="section__form-group">
-            <label>
+            <label class="required">
                 Date to move out
             </label>
             <input type="text" [formControl]="$any(mortgageForm).controls['movingOutDate']">
@@ -217,7 +217,7 @@
         <button class="visibility-button" type="button" (click)="toggle('utilitiesActive')">{{
             conditionalFields.utilitiesActive ? 'Remove' : 'Add' }}</button>
         <div *ngIf="conditionalFields.utilitiesActive" class="section__form-group">
-            <label>
+            <label class="required">
                 Seller will have to pay the utilities before the property is delegated
             </label>
         </div>

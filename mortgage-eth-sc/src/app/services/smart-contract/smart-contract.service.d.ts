@@ -1,9 +1,4 @@
 export interface Mortgage {
-    propertyId: string
-    basePrice: number
-    basePriceLabel: string
-    address: string
-    area: number
     buyer: {
         fullName: string
         addressStreet: string
@@ -17,6 +12,13 @@ export interface Mortgage {
         addressCity: string
         personalId: string
         mupId: string
+    },
+    property: {
+        propertyId: string
+        address: string
+        area: number
+        basePrice: number
+        basePriceLabel: string
     }
     conclusionDate: string
     conclusionAddress: string
@@ -60,6 +62,7 @@ export interface ContractSourceResponse {
 export interface MortgageMethods {
     getSellerInfo: () => Promise<Function>,
     getBuyerInfo: () => Promise<Function>,
+    getPropertyDetails: () => Promise<Function>,
     getConclusionDate: () => Promise<Function>,
     getConclusionAddress: () => Promise<Function>,
     getTaxPayer: () => Promise<Function>,
@@ -68,4 +71,5 @@ export interface MortgageMethods {
     getDepositValue: () => Promise<Function>,
     getPaymentPartsNum: () => Promise<Function>,
     getMovingOutDate: () => Promise<Function>,
+    sattleUtilitiesPayment: () => Promise<Function>,
 }

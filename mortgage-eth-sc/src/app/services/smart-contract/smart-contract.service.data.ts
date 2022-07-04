@@ -71,24 +71,41 @@ export const MortgageABI = [
 				"type": "tuple"
 			},
 			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "propertyId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "addr",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "area",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "basePrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "basePriceLabel",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Mortgage.Property",
+				"name": "p",
+				"type": "tuple"
+			},
+			{
 				"internalType": "uint256",
 				"name": "total_price",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "base_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "base_price_label",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "addr",
-				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -338,6 +355,19 @@ export const MortgageABI = [
 	},
 	{
 		"inputs": [],
+		"name": "getPropertyDetails",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getProxy",
 		"outputs": [
 			{
@@ -513,7 +543,7 @@ export const MortgageABI = [
 			},
 			{
 				"internalType": "bytes",
-				"name": "_data",
+				"name": "data",
 				"type": "bytes"
 			}
 		],
@@ -634,6 +664,39 @@ export const MortgageABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "propertyId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "addr",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "area",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "basePrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "basePriceLabel",
+				"type": "string"
+			}
+		],
+		"name": "setPropertyDetails",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "proxy_full_name",
 				"type": "string"
@@ -678,6 +741,13 @@ export const MortgageABI = [
 			}
 		],
 		"name": "setSeller",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "setUtilities",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

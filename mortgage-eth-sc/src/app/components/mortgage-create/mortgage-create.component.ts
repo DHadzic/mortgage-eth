@@ -13,11 +13,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MortgageCreateComponent {
   public mortgageForm: FormGroup = new FormGroup({
-    propertyId: new FormControl(null, Validators.required),
-    basePrice: new FormControl(null, Validators.required),
-    basePriceLabel: new FormControl(null, Validators.required),
-    area: new FormControl(null, Validators.required),
-    address: new FormControl(null, Validators.required),
+    property: new FormGroup({
+      propertyId: new FormControl(null, Validators.required),
+      address: new FormControl(null, Validators.required),  
+      area: new FormControl(null, Validators.required),
+      basePrice: new FormControl(null, Validators.required),
+      basePriceLabel: new FormControl(null, Validators.required),
+    }),
     buyer: new FormGroup({
       fullName: new FormControl(null, Validators.required),
       addressStreet: new FormControl(null, Validators.required),
@@ -35,7 +37,7 @@ export class MortgageCreateComponent {
     conclusionDate: new FormControl(null, Validators.required),
     conclusionAddress: new FormControl(null, Validators.required),
     courtInJurisdiction: new FormControl(null, Validators.required),
-    taxPayer: new FormControl(null, Validators.required),
+    taxPayer: new FormControl("Buyer", Validators.required),
     proxyFullName: new FormControl(null),
     proxyPersonalId: new FormControl(null),
     depositValue: new FormControl(null),

@@ -9,6 +9,13 @@ const utils = require('./helpers/utils.js');
 const app = express()
 app.use(cors());
 app.use(bodyParser.json());
+// Test - doesn't log anything  
+// app.use((err, _1, res, _2) => {
+//     res.locals.message = err.message;
+//     res.locals.error = err;
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
 const port = 3000;
 
 contractHelper.handleStorage();
@@ -38,5 +45,5 @@ app.post('/contract-preview', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Mortgage app - started on port : ${port}`);
+    console.log(`INFO: Mortgage app - started on port : ${port}`);
 })

@@ -51,12 +51,23 @@
                 font-weight: 550;
             }
 
+            .required::after {
+                content: '*';
+                font-size: 20px;
+                color: #fc0356;
+            }
+
             input[type="text"],
             input[type="number"] {
                 width: 280px;
                 height: 28px;
-                border: 1px solid darkgray;
+                border: 1.5px solid darkgray;
                 border-radius: 5px;
+            }
+
+            input[type="text"].ng-invalid.ng-touched,
+            input[type="number"].ng-invalid.ng-touched {
+                border: 1.5px solid #fc0356;
             }
 
             input::-webkit-outer-spin-button,
@@ -74,4 +85,4 @@
         align-items: center;
     }
 }
-
+// .ng-touched

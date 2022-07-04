@@ -80,10 +80,10 @@ const deployContract = async (contract, contractData) => {
           from: accounts[0],
           data: contractTransaction.encodeABI(),
           gas: gasEst,
-          gasPrice: 0,
+          gasPrice: '0',
       });
 
-      console.log('Contract address -> ', contractInstance.options.address);
+      console.log('INFO: Contract address -> ', contractInstance.options.address);
       storageHelper.storeAddress(contractInstance.options.address);
 
       return contractInstance;
@@ -101,19 +101,23 @@ const deployContract = async (contract, contractData) => {
 
   try {
     if (optionalFlags.proxy) {
-      await contractInstance.methods.setProxy(contractData.proxyFullName, contractData.proxyPersonalId).call();
+      await contractInstance.methods.setProxy(contractData.proxyFullName, contractData.proxyPersonalId).send({from: accounts[0]});
     }
     if (optionalFlags.deposit) {
-      await contractInstance.methods.setDeposit(contractData.depositValue, contractData.depositValueLabel).call();
+      await contractInstance.methods.setDeposit(contractData.depositValue, contractData.depositValueLabel).send({from: accounts[0]});
     }
     if (optionalFlags.paymentParts) {
-      await contractInstance.methods.setPaymentPartsNum(contractData.paymentPartsNum).call();
+      await contractInstance.methods.setPaymentPartsNum(contractData.paymentPartsNum).send({from: accounts[0]});
     }
     if (optionalFlags.movingOut) {
-      await contractInstance.methods.setMovingOutDate(contractData.movingOutDate).call();
-    }  
+      await contractInstance.methods.setMovingOutDate(contractData.movingOutDate).send({from: accounts[0]});
+    }
+    if (optionalFlags.utilities) {
+      await contractInstance.methods.setUtilities().send({from: accounts[0]});
+    }
+    console.log('INFO: Optional data set!');
   } catch {
-    console.error('Method invocation went wrong!');
+    console.error('ERR: Optional data setting went wrong!');
   }
 
   return contractInstance.options.address;

@@ -10,15 +10,20 @@ contract Mortgage is ERC721 {
         string personalId;
         string mupId;
     }
+    struct Property {
+        uint256 propertyId;
+        string addr;
+        uint256 area;
+        uint256 basePrice;
+        string basePriceLabel;
+    }
     enum Accountable{ BUYER, SELLER }
 
     address public owner;
     Person private _seller;
     Person private _buyer;
+    Property private _property;
     uint256 private _totalPrice;
-    uint256 private _basePrice;
-    string private _basePriceLabel;
-    string private _address;
     string private _conclusionDate;
     string private _conclusionAddress;
     Accountable private _taxPayer;
@@ -38,16 +43,14 @@ contract Mortgage is ERC721 {
     string private _movingOutDate;
     bool private _movedOut = false;
     // Option 5 - UTILITIES_PAYMENT
-    bool private _utilitiesPaid = false;
+    uint private _utilitiesPaid = 100;
 
     constructor(
             uint256 property_id,
             Person memory s,
             Person memory b,
+            Property memory p,
             uint256 total_price,
-            uint256 base_price,
-            string memory base_price_label,
-            string memory addr,
             string memory conclusion_date,
             string memory conclusion_address,
             Accountable taxp,
@@ -58,10 +61,8 @@ contract Mortgage is ERC721 {
 
         _seller = s;
         _buyer = b;
+        _property = p;
         _totalPrice = total_price;
-        _basePrice = base_price;
-        _address = addr; 
-        _basePriceLabel = base_price_label;
         _taxPayer = taxp;
         _courtInJurisdiction = court;
         _conclusionDate = conclusion_date;
@@ -122,6 +123,32 @@ contract Mortgage is ERC721 {
         );
     }
 
+    function setPropertyDetails(
+            uint256 propertyId,
+            string memory addr,
+            uint256 area,
+            uint256 basePrice,
+            string memory basePriceLabel
+        ) public {
+        require(msg.sender == owner, "Unauthorized");
+
+        _property.propertyId = propertyId;
+        _property.addr = addr;
+        _property.area = area;
+        _property.basePrice = basePrice;
+        _property.basePriceLabel = basePriceLabel;
+    }
+
+    function getPropertyDetails() public view returns(string memory) {
+        return string(abi.encodePacked(
+            Strings.toString(_property.propertyId)," - ",
+            _property.addr," - ", 
+            Strings.toString(_property.area), " - ",
+            Strings.toString(_property.basePrice), " - ",
+            _property.basePriceLabel)
+        );
+    }
+
     function getConclusionDate() public view returns(string memory) {
         return _conclusionDate;
     }
@@ -139,7 +166,7 @@ contract Mortgage is ERC721 {
     }
 
     function isSettled() public view returns(bool) {
-        uint256 totalPayed = _basePrice;
+        uint256 totalPayed = _property.basePrice;
 
         // Option 2 - DEPOSIT
         if (!_depositSattled) {
@@ -158,7 +185,7 @@ contract Mortgage is ERC721 {
         }
 
         // Option 5 - UTILITIES_PAYMENT
-        if (!_utilitiesPaid) {
+        if (_utilitiesPaid == 0) {
             return false;
         }
 
@@ -173,6 +200,10 @@ contract Mortgage is ERC721 {
     }
 
     function getProxy() public view returns(string memory) {
+        assert(
+            keccak256(bytes(_proxyFullName)) != keccak256("") &&
+            keccak256(bytes(_proxyPersonalId)) != keccak256(""));
+
         return string(abi.encodePacked(
             _proxyFullName," - ",
             _proxyPersonalId)
@@ -187,6 +218,8 @@ contract Mortgage is ERC721 {
     }
 
     function getDepositValue() public view returns(uint256) {
+        assert(_depositValue != 0);
+
         return _depositValue;
     }
 
@@ -202,6 +235,8 @@ contract Mortgage is ERC721 {
     }
 
     function getPaymentPartsNum() public view returns(uint256) {
+        assert(_paymentPartsNum != 0);
+
         return _paymentPartsNum;
     }
 
@@ -214,10 +249,13 @@ contract Mortgage is ERC721 {
     // Option 4 - MOVING_OUT_DATE
     function setMovingOutDate(string memory moving_out_date) public {
         require(msg.sender == owner, "Unauthorized");
+
         _movingOutDate = moving_out_date;
     }
 
     function getMovingOutDate() public view returns(string memory) {
+        assert(keccak256(bytes(_movingOutDate)) != keccak256(""));
+
         return _movingOutDate;
     }
 
@@ -227,8 +265,16 @@ contract Mortgage is ERC721 {
     }
 
     // Option 5 - UTILITIES_PAYMENT
+    function setUtilities() public {
+        require(msg.sender == owner, "Unauthorized");
+
+        _utilitiesPaid = 0;
+    }
+
     function sattleUtilitiesPayment() public {
         require(msg.sender == owner, "Unauthorized");
-        _utilitiesPaid = true;
+        assert(_utilitiesPaid != 100);
+
+        _utilitiesPaid = 1;
     }
 }

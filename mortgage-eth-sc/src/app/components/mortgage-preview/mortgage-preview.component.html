@@ -13,218 +13,227 @@
 </div>
 
 <div class="wrapper">
-    <div class="section">
-        <ng-container *ngIf="!isLoading; else loader">
+    <ng-container *ngIf="mortgageData$ | async as mortgageData;else empty">
+        <div class="section">
+            <ng-container *ngIf="!isLoading; else loader">
+                <label class="title">
+                    Conclusion informations
+                </label>
+                <div class="section__form-group">
+                    <label>
+                        Conclusion date
+                    </label>
+                    <label> {{ mortgageData.conclusionDate }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Conclusion address
+                    </label>
+                    <label> {{ mortgageData.conclusionAddress }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Court in jurisdiction
+                    </label>
+                    <label> {{ mortgageData.courtInJurisdiction }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Tax payer
+                    </label>
+                    <label> {{ mortgageData.taxPayer === 'BUYER' ? 'Buyer' : 'Seller' }}</label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="section">
+            <ng-container *ngIf="!isLoading; else loader">
+                <label class="title">
+                    Seller details
+                </label>
+                <div class="section__form-group">
+                    <label>
+                        Full name
+                    </label>
+                    <label> {{ mortgageData.seller.fullName }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Address street
+                    </label>
+                    <label> {{ mortgageData.seller.addressStreet }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Address city
+                    </label>
+                    <label> {{ mortgageData.seller.addressCity }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Personal id (JMBG)
+                    </label>
+                    <label> {{ mortgageData.seller.personalId }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        MUP id
+                    </label>
+                    <label> {{ mortgageData.seller.mupId }} </label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="section">
+            <ng-container *ngIf="!isLoading; else loader">
+                <label class="title">
+                    Buyer details
+                </label>
+                <div class="section__form-group">
+                    <label>
+                        Full name
+                    </label>
+                    <label> {{ mortgageData.buyer.fullName }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Address street
+                    </label>
+                    <label> {{ mortgageData.buyer.addressStreet }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Address city
+                    </label>
+                    <label> {{ mortgageData.buyer.addressCity }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Personal id (JMBG)
+                    </label>
+                    <label> {{ mortgageData.buyer.personalId }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        MUP id
+                    </label>
+                    <label> {{ mortgageData.buyer.mupId }} </label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="section">
+            <ng-container *ngIf="!isLoading; else loader">
+                <label class="title">
+                    Property details
+                </label>
+                <div class="section__form-group">
+                    <label>
+                        Identification number
+                    </label>
+                    <label> {{ mortgageData.property.propertyId }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Address
+                    </label>
+                    <label> {{ mortgageData.property.address }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Area (number)
+                    </label>
+                    <label> {{ mortgageData.property.area }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Price (number - RSD)
+                    </label>
+                    <label> {{ mortgageData.property.basePrice }} </label>
+                </div>
+                <div class="section__form-group">
+                    <label>
+                        Price (label)
+                    </label>
+                    <label> {{ mortgageData.property.basePriceLabel }} </label>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="section" *ngIf="conditionalFields.proxyActive">
             <label class="title">
-                Conclusion informations
+                Is by third person (optional)
             </label>
             <div class="section__form-group">
                 <label>
-                    Conclusion date
+                    T.P person full name
                 </label>
-                <label> {{mortgageData.conclusionDate }} </label>
+                <label> {{ mortgageData.proxyFullName }} </label>
             </div>
             <div class="section__form-group">
                 <label>
-                    Conclusion address
+                    T.P person id (JMBG)
                 </label>
-                <label> {{mortgageData.conclusionAddress }} </label>
+                <label> {{ mortgageData.proxyPersonalId }} </label>
             </div>
-            <div class="section__form-group">
-                <label>
-                    Court in jurisdiction
-                </label>
-                <label> {{mortgageData.courtInJurisdiction }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Tax payer
-                </label>
-                <label> {{ mortgageData.taxPayer === 'BUYER' ? 'Buyer' : 'Seller' }}</label>
-            </div>
-        </ng-container>
-    </div>
+        </div>
 
-    <div class="section">
-        <ng-container *ngIf="!isLoading; else loader">
+        <div class="section" *ngIf="conditionalFields.depositActive">
             <label class="title">
-                Seller details
+                Use deposit (optional)
             </label>
             <div class="section__form-group">
                 <label>
-                    Full name
+                    Deposit value (number)
                 </label>
-                <label> {{mortgageData.seller.fullName }} </label>
+                <label> {{ mortgageData.depositValue }} </label>
             </div>
             <div class="section__form-group">
                 <label>
-                    Address street
+                    Deposit value (label)
                 </label>
-                <label> {{mortgageData.seller.addressStreet }} </label>
+                <label> {{ mortgageData.depositValueLabel }} </label>
             </div>
-            <div class="section__form-group">
-                <label>
-                    Address city
-                </label>
-                <label> {{mortgageData.seller.addressCity }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Personal id (JMBG)
-                </label>
-                <label> {{mortgageData.seller.personalId }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    MUP id
-                </label>
-                <label> {{mortgageData.seller.mupId }} </label>
-            </div>
-        </ng-container>
-    </div>
+        </div>
 
-    <div class="section">
-        <ng-container *ngIf="!isLoading; else loader">
+        <div class="section" *ngIf="conditionalFields.paymentPartsActive">
             <label class="title">
-                Buyer details
+                Pay in parts (optional)
             </label>
             <div class="section__form-group">
                 <label>
-                    Full name
+                    Number of parts
                 </label>
-                <label> {{mortgageData.buyer.fullName }} </label>
+                <label> {{ mortgageData.paymentPartsNum }} </label>
             </div>
-            <div class="section__form-group">
-                <label>
-                    Address street
-                </label>
-                <label> {{mortgageData.buyer.addressStreet }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Address city
-                </label>
-                <label> {{mortgageData.buyer.addressCity }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Personal id (JMBG)
-                </label>
-                <label> {{mortgageData.buyer.personalId }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    MUP id
-                </label>
-                <label> {{mortgageData.buyer.mupId }} </label>
-            </div>
-        </ng-container>
-    </div>
+        </div>
 
-    <div class="section">
-        <ng-container *ngIf="!isLoading; else loader">
+        <div class="section" *ngIf="conditionalFields.movingOutActive">
             <label class="title">
-                Property details
+                Move out date (optional)
             </label>
             <div class="section__form-group">
                 <label>
-                    Identification number
+                    Date to move out
                 </label>
-                <label> {{mortgageData.propertyId }} </label>
+                <label> {{ mortgageData.movingOutDate }} </label>
             </div>
-            <div class="section__form-group">
-                <label>
-                    Address
-                </label>
-                <label> {{mortgageData.address }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Area (number)
-                </label>
-                <label> {{mortgageData.area }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Price (number - RSD)
-                </label>
-                <label> {{mortgageData.basePrice }} </label>
-            </div>
-            <div class="section__form-group">
-                <label>
-                    Price (label)
-                </label>
-                <label> {{mortgageData.basePriceLabel }} </label>
-            </div>
-        </ng-container>
-    </div>
+        </div>
 
-    <div class="section" *ngIf="conditionalFields.proxyActive">
-        <label class="title">
-            Is by third person (optional)
-        </label>
-        <div class="section__form-group">
-            <label>
-                T.P person full name
+        <div class="section" *ngIf="conditionalFields.utilitiesActive">
+            <label class="title">
+                Seller will have to pay the utilities before the property is delegated
             </label>
-            <label> {{mortgageData.proxyFullName }} </label>
         </div>
-        <div class="section__form-group">
-            <label>
-                T.P person id (JMBG)
-            </label>
-            <label> {{mortgageData.proxyPersonalId }} </label>
-        </div>
-    </div>
-
-    <div class="section" *ngIf="conditionalFields.depositActive">
-        <label class="title">
-            Use deposit (optional)
-        </label>
-        <div class="section__form-group">
-            <label>
-                Deposit value (number)
-            </label>
-            <label> {{mortgageData.depositValue }} </label>
-        </div>
-        <div class="section__form-group">
-            <label>
-                Deposit value (label)
-            </label>
-            <label> {{mortgageData.depositValueLabel }} </label>
-        </div>
-    </div>
-
-    <div class="section" *ngIf="conditionalFields.paymentPartsActive">
-        <label class="title">
-            Pay in parts (optional)
-        </label>
-        <div class="section__form-group">
-            <label>
-                Number of parts
-            </label>
-            <label> {{mortgageData.paymentPartsNum }} </label>
-        </div>
-    </div>
-
-    <div class="section" *ngIf="conditionalFields.movingOutActive">
-        <label class="title">
-            Move out date (optional)
-        </label>
-        <div class="section__form-group">
-            <label>
-                Date to move out
-            </label>
-            <label> {{mortgageData.movingOutDate }} </label>
-        </div>
-    </div>
-    <div class="section" *ngIf="conditionalFields.utilitiesActive">
-        <label class="title">
-            Seller will have to pay the utilities before the property is delegated
-        </label>
-    </div>
+    </ng-container>
 </div>
 
 <ng-template #loader>
     <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+    <div class="section">
+        <label>No contract selected yet.</label>
+    </div>
 </ng-template>

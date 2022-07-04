@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DeployedContractResponse, ContractSourceResponse, Mortgage, ContractSourceData, MortgageMethods } from './smart-contract.service.d';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MortgageABI } from './smart-contract.service.data'
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
@@ -11,8 +11,13 @@ import Web3 from 'web3';
 })
 export class SmartContractService {  
   private _url = 'http://localhost:3000';
+  private _mortgageData$: BehaviorSubject<Mortgage | null>;
+  public mortgageData$: Observable<Mortgage | null>;
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) {
+    this._mortgageData$ = new BehaviorSubject<Mortgage | null>(null);
+    this.mortgageData$ = this._mortgageData$.asObservable();
+  }
 
   public deployContract(data: Mortgage): Observable<DeployedContractResponse> {
     return this._http.post<DeployedContractResponse>(this._url + '/contract', data);
@@ -35,11 +40,11 @@ export class SmartContractService {
     let acts = [
       {
         title: 'Član 1.',
-        body: `Prodavac je jedini vlasnik nepokretnosti koja se nalazi na adresi ${ data.address }, površine ${ data.area } m2, upisane u listu nepokretnosti br. ${ data.propertyId }.`
+        body: `Prodavac je jedini vlasnik nepokretnosti koja se nalazi na adresi ${ data.property.address }, površine ${ data.property.area } m2, upisane u listu nepokretnosti br. ${ data.property.propertyId }.`
       },
       {
         title: 'Član 2.',
-        body: `Prodavac prodaje, a kupac kupuje nepokretnost iz člana 1. ovog ugovora, po međusobno ugovorenoj ceni od ${ data.basePrice } (slovima: ${ data.basePriceLabel }) dinara.`
+        body: `Prodavac prodaje, a kupac kupuje nepokretnost iz člana 1. ovog ugovora, po međusobno ugovorenoj ceni od ${ data.property.basePrice } (slovima: ${ data.property.basePriceLabel }) dinara.`
       },
       {
         title: 'Član 3.',
@@ -160,21 +165,130 @@ export class SmartContractService {
     return this._http.get<string[]>(this._url + '/contracts');
   }
 
-  public async getContractData(address: string): Promise<any> {
-    if (!address) {
-      return
-    }
+  public async getContractData(address: string): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      if (!address) {
+        return
+      }
+  
+      try{
+        const web3 = new Web3();
+        web3.setProvider('http://localhost:8545');
+        const contract = new web3.eth.Contract(MortgageABI as AbiItem[], address);
+    
+        const buyerInfoFn =  await (contract.methods as MortgageMethods).getBuyerInfo();
+        const sellerInfoFn =  await (contract.methods as MortgageMethods).getSellerInfo();
+        const propertyInfoFn =  await (contract.methods as MortgageMethods).getPropertyDetails();
+        const conclusionDateFn =  await (contract.methods as MortgageMethods).getConclusionDate();
+        const conclusionAddressFn =  await (contract.methods as MortgageMethods).getConclusionAddress();
+        const taxPayerFn =  await (contract.methods as MortgageMethods).getTaxPayer();
+        const courtInJurisdictionFn =  await (contract.methods as MortgageMethods).getCourtInJurisdiction();
+        const proxyFn =  await (contract.methods as MortgageMethods).getProxy();
+        const depositValueFn =  await (contract.methods as MortgageMethods).getDepositValue();
+        const paymentPartsNumFn =  await (contract.methods as MortgageMethods).getPaymentPartsNum();
+        const movingOutDateFn =  await (contract.methods as MortgageMethods).getMovingOutDate();
+        const sattleUtilitiesPaymentFn =  await (contract.methods as MortgageMethods).sattleUtilitiesPayment();
+        
+        // To get data
+        const buyerInfo = await buyerInfoFn.call(null);
+        const sellerInfo = await sellerInfoFn.call(null);
+        const propertyInfo = await propertyInfoFn.call(null);
+        const conclusionDate  = await conclusionDateFn.call(null);
+        const conclusionAddress = await conclusionAddressFn.call(null);
+        const taxPayer = await taxPayerFn.call(null);
+        const courtInJurisdiction = await courtInJurisdictionFn.call(null);
+    
+        let proxy = undefined,
+          depositValue = undefined,
+          paymentPartsNum = undefined,
+          movingOutDate = undefined,
+          utilities = undefined;
+    
+        try {
+          proxy = await proxyFn.call(null);
+        } catch {}
+        try {
+          depositValue = await depositValueFn.call(null);
+        } catch {}
+        try {
+          paymentPartsNum = await paymentPartsNumFn.call(null);
+        } catch {}
+        try {
+          movingOutDate = await movingOutDateFn.call(null);
+        } catch {}
+        try {
+          utilities = await sattleUtilitiesPaymentFn.call(null);
+        } catch {}
+    
+        // console.log({ buyerInfo, sellerInfo, propertyInfo, conclusionDate, conclusionAddress, taxPayer, courtInJurisdiction });        
+        // console.log({ proxy, depositValue, paymentPartsNum, movingOutDate, utilities });
 
-    const web3 = new Web3();
-    web3.setProvider('http://localhost:8545');
-    const contract = new web3.eth.Contract(MortgageABI as AbiItem[], address);
+        const buyerInfoList = (buyerInfo as string).split('-');
+        const sellerInfoList = (sellerInfo as string).split('-');
+        const propertyInfoList = (propertyInfo as string).split('-');
 
-    console.log(contract.methods)
-    const buyerInfoCall =  await (contract.methods as MortgageMethods).getBuyerInfo();
-    console.log(buyerInfoCall);
+        if (buyerInfoList.length !== 5 || sellerInfoList.length !== 5 || propertyInfoList.length !== 5) {
+          console.log('ERROR IN LISTS');
+        }
 
-    // To get data
-    const buyerInfo = await buyerInfoCall.call(null);
-    console.log(buyerInfo);
+        const contractData: Mortgage = {
+          buyer: {
+              fullName: buyerInfoList[0].trim(),
+              addressStreet: buyerInfoList[1].trim(),
+              addressCity: buyerInfoList[2].trim(),
+              personalId: buyerInfoList[3].trim(),
+              mupId: buyerInfoList[4].trim(),
+          },
+          seller: {
+            fullName: sellerInfoList[0].trim(),
+            addressStreet: sellerInfoList[1].trim(),
+            addressCity: sellerInfoList[2].trim(),
+            personalId: sellerInfoList[3].trim(),
+            mupId: sellerInfoList[4].trim(),
+        },
+          property: {
+            propertyId: propertyInfoList[0].trim(),
+            address: propertyInfoList[0].trim(),
+            area: +propertyInfoList[0].trim(),
+            basePrice: +propertyInfoList[0].trim(),
+            basePriceLabel: propertyInfoList[0].trim(),
+          },
+          conclusionDate,
+          conclusionAddress,
+          courtInJurisdiction,
+          taxPayer: taxPayer == 1 ? 'BUYER' : 'SELLER',
+        }
+
+        if (proxy) {
+          const proxyList = proxy.split('-');
+          contractData.proxyFullName = proxyList[0].trim();
+          contractData.proxyPersonalId = proxyList[1].trim();
+        }
+
+        if (depositValue) {
+          const depositValueList = proxy.split('-');
+          contractData.depositValue = depositValueList[0].trim();
+          contractData.depositValueLabel = depositValueList[1].trim();          
+        }
+
+        if (paymentPartsNum) {
+          contractData.paymentPartsNum = +paymentPartsNum;
+        }
+
+        if (movingOutDate) {
+          contractData.movingOutDate = movingOutDate;
+        }
+
+        if (utilities) {
+          contractData.utilitiesPaid = false;
+        }
+
+        this._mortgageData$.next(contractData);
+  
+        resolve(true);  
+      } catch (err) {
+        reject(false);
+      }
+    })
   }
 }
