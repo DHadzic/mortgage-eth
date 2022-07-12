@@ -33,5 +33,5 @@ Local blockchain network is hosted by [ganache-cli](https://github.com/trufflesu
   * Opet terminal and run `ganache-cli -a 1 --allowUnlimitedContractSize true`
   * Local blockchain network server is started and running
   
-### Reserach papre
+### Reserach paper
   * [Smart contracts and mortgage PDF](https://github.com/DHadzic/mortgage-eth/blob/main/Pametni%20ugovori%20i%20nekretnine%20-%20Damir%20Had%C5%BEi%C4%87.pdf)
